@@ -122,7 +122,7 @@ body {
 
 .logo {
     width: 60vw;
-    height: 45vh;
+    height: 40vh;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
 }
 
@@ -1138,3 +1138,4 @@ body {
     background: rgba(255,0,0,0.1);
     color: #f00;
 }
+
