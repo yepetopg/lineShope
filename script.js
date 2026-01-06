@@ -1,6 +1,7 @@
 import { onSnapshot } 
 from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
+
 import {
   getStorage,
   ref,
@@ -333,7 +334,6 @@ btnCrear.addEventListener("click", async () => {
       stock.value = "";
 
       // Refrescar productos
-      iniciarProductosRealtime();
     };
 
     reader.readAsDataURL(file); // Convierte la imagen a Base64
@@ -705,7 +705,7 @@ function crearProductoHTML(producto) {
         if (confirm("¿Seguro que quieres eliminar este producto?")) {
             try {
                 // Eliminar del DOM
-                div.remove();
+                
                 // Eliminar de Firebase
                 const docRef = doc(db, "productos", producto.id);
                 await deleteDoc(docRef);
@@ -716,6 +716,114 @@ function crearProductoHTML(producto) {
             }
         }
     });
+}
+    function convertirABase64(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+    });
+}
+    const btnCrearPromo = document.getElementById("btnCrearPromo");
+
+btnCrearPromo.addEventListener("click", async () => {
+    const titulo = document.getElementById("promoTitulo").value;
+    const descripcion = document.getElementById("promoDescripcion").value;
+    const files = document.getElementById("promoImagenes").files;
+
+    if (!titulo || !descripcion || files.length === 0) {
+        alert("Completa todos los campos");
+        return;
+    }
+
+    const imagenes = [];
+
+    for (const file of files) {
+        const base64 = await convertirABase64(file);
+        imagenes.push(base64);
+    }
+
+    await addDoc(collection(db, "promociones"), {
+        titulo,
+        descripcion,
+        imagenes,
+        fecha: Date.now()
+    });
+
+    alert("Promoción creada");
+
+    // limpiar
+    document.getElementById("promoTitulo").value = "";
+    document.getElementById("promoDescripcion").value = "";
+    document.getElementById("promoImagenes").value = "";
+});
+
+    function crearPromocionHTML(promo) {
+        const contenedor = document.querySelector(".promociones-contenedor");
+
+        const div = document.createElement("div");
+        div.classList.add("promocion");
+        div.dataset.id = promo.id;
+
+        div.innerHTML = `
+            <button class="btn-eliminar">✕</button>
+
+            <h3 class="promo-titulo">${promo.titulo}</h3>
+            <p class="promo-descripcion">${promo.descripcion}</p>
+
+            <div class="promo-galeria">
+            <img src="${promo.imagenes[0]}" class="promo-principal">
+
+            <div class="promo-miniaturas">
+                ${promo.imagenes.map(img => `
+                <img src="${img}" class="promo-thumb">
+                `).join("")}
+            </div>
+            </div>
+        `;
+
+        contenedor.appendChild(div);
+
+        activarGaleriaPromos(div);
+        activarEliminarPromocion(div);
+        }
+
+
+    function activarGaleriaPromos(div) {
+    const principal = div.querySelector(".promo-principal");
+    const thumbs = div.querySelectorAll(".promo-thumb");
+
+    thumbs.forEach(img => {
+        img.addEventListener("click", () => {
+            principal.src = img.src;
+        });
+    });
+}
+
+    onSnapshot(collection(db, "promociones"), (snapshot) => {
+        const contenedor = document.querySelector(".promociones-contenedor");
+        contenedor.innerHTML = "";
+
+        snapshot.forEach(docSnap => {
+            crearPromocionHTML({
+                id: docSnap.id,
+                ...docSnap.data()
+            });
+        });
+    });
+
+
+
+async function activarEliminarPromocion(card) {
+  const btn = card.querySelector(".btn-eliminar");
+
+  btn.addEventListener("click", async () => {
+    const id = card.dataset.id;
+
+    if (!confirm("¿Eliminar esta promoción?")) return;
+
+    await deleteDoc(doc(db, "promociones", id));
+  });
 }
 
     actualizarBadge();
