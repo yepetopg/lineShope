@@ -19,11 +19,32 @@ import {
   addDoc,
   doc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 
 import { db } from "./firebase.js";
+
+
+
+async function subirImagenCloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "promos_unsigned");
+  formData.append("folder", "promociones");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/diaj5yeaw/image/upload",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const data = await res.json();
+  return data.secure_url;
+}
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -727,35 +748,47 @@ function crearProductoHTML(producto) {
     const btnCrearPromo = document.getElementById("btnCrearPromo");
 
 btnCrearPromo.addEventListener("click", async () => {
-    const titulo = document.getElementById("promoTitulo").value;
-    const descripcion = document.getElementById("promoDescripcion").value;
+  try {
+    const titulo = document.getElementById("promoTitulo").value.trim();
+    const descripcion = document.getElementById("promoDescripcion").value.trim();
     const files = document.getElementById("promoImagenes").files;
 
     if (!titulo || !descripcion || files.length === 0) {
-        alert("Completa todos los campos");
-        return;
+      alert("Completa todos los campos");
+      return;
     }
 
-    const imagenes = [];
+    btnCrearPromo.disabled = true;
+    btnCrearPromo.textContent = "Subiendo...";
+
+    const urls = [];
 
     for (const file of files) {
-        const base64 = await convertirABase64(file);
-        imagenes.push(base64);
+      const url = await subirImagenCloudinary(file);
+      urls.push(url);
     }
 
     await addDoc(collection(db, "promociones"), {
-        titulo,
-        descripcion,
-        imagenes,
-        fecha: Date.now()
+      titulo,
+      descripcion,
+      imagenes: urls,
+      createdAt: serverTimestamp()
     });
 
-    alert("Promoción creada");
-
-    // limpiar
+    // limpiar formulario
     document.getElementById("promoTitulo").value = "";
     document.getElementById("promoDescripcion").value = "";
     document.getElementById("promoImagenes").value = "";
+
+    alert("Promoción creada correctamente");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error al crear la promoción");
+  } finally {
+    btnCrearPromo.disabled = false;
+    btnCrearPromo.textContent = "Crear promoción";
+  }
 });
 
     function crearPromocionHTML(promo) {
