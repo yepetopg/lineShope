@@ -111,8 +111,57 @@
     </section>
 
 
+    <h2 class="titulo-seccion">Marcas</h2>
 
-    <div class="pruebas"></div>
+    <section class="marcas">
+
+  <div class="marcas-grid">
+
+    <div class="marca-card activa" data-marca="todas">
+        <div class="marca-logo">
+            <img src="img/todas_las_marcas.png">
+        </div>
+        <p>Todas</p>
+    </div>
+
+    <div class="marca-card" data-marca="samsung">
+        <div class="marca-logo">
+            <img src="img/samsung.webp">
+        </div>
+        <p>Samsung</p>
+    </div>
+
+    <div class="marca-card" data-marca="apple">
+        <div class="marca-logo">
+            <img src="img/Apple.png">
+        </div>
+      <p>Apple</p>
+    </div>
+
+    <div class="marca-card" data-marca="xiaomi">
+        <div class="marca-logo">
+            <img src="img/xiaomi.png">
+        </div>
+        <p>Xiaomi</p>
+    </div>
+
+    <div class="marca-card" data-marca="oppo">
+        <div class="marca-logo">
+            <img src="img/oppo.png">
+        </div>
+      <p>Oppo</p>
+    </div>
+
+    <div class="marca-card" data-marca="motorola">
+        <div class="marca-logo">
+            <img src="img/motorola.png">
+      </div>
+      <p>Motorola</p>
+    </div>
+
+  </div>
+</section>
+
     <footer class="footer">
         <p>© 2025 Linea Store</p>
     </footer>
@@ -137,7 +186,14 @@
                     <option value="cacharros">Cacharros</option>
                     <option value="celulares">Celulares</option>
                 </select>
-
+                <select id="marca">
+                    <option value="na">N/A</option>
+                    <option value="samsung">Samsung</option>
+                    <option value="apple">Apple</option>
+                    <option value="xiaomi">Xiaomi</option>
+                    <option value="oppo">Oppo</option>
+                    <option value="motorola">Motorola</option>
+                </select>
                 <input type="text" id="titulo" placeholder="Título del producto">
                 <input type="number" id="precio" placeholder="Precio">
                 <input type="number" id="stock" placeholder="Unidades disponibles">
