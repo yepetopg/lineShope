@@ -323,6 +323,8 @@ btnCrear.addEventListener("click", async () => {
   const precio = document.getElementById("precio");
   const stock = document.getElementById("stock");
   const categoria = document.getElementById("categoria");
+  const marca = document.getElementById("marca");
+
 
   if (!imgInput.files[0] || !titulo.value || !precio.value || !stock.value) {
     alert("Completa todos los campos");
@@ -339,12 +341,14 @@ btnCrear.addEventListener("click", async () => {
 
       // 📦 Guardar producto en Firestore
       await addDoc(collection(db, "productos"), {
-        nombre: titulo.value,
-        precio: Number(precio.value),
-        stock: Number(stock.value),
-        categoria: categoria.value,
-        imagen: base64Imagen // 🔥 Guardamos directamente la imagen en Base64
-      });
+            nombre: titulo.value,
+            precio: Number(precio.value),
+            stock: Number(stock.value),
+            categoria: categoria.value,
+            marca: marca.value || "na",
+            imagen: base64Imagen
+        });
+
 
       alert("Producto creado correctamente");
 
@@ -689,7 +693,9 @@ function crearProductoHTML(producto) {
     const div = document.createElement("div");
     div.classList.add("producto");
     div.dataset.categoria = producto.categoria;
-    div.dataset.id = producto.id; // 🔥 ESTE ES CLAVE
+    div.dataset.marca = producto.marca || "na";
+    div.dataset.id = producto.id;
+ // 🔥 ESTE ES CLAVE
 
     div.innerHTML = `
         <img src="${producto.imagen}" class="productos-img">
@@ -858,6 +864,34 @@ async function activarEliminarPromocion(card) {
     await deleteDoc(doc(db, "promociones", id));
   });
 }
+    let marcaActiva = "todas";
+
+const marcaCards = document.querySelectorAll(".marca-card");
+
+marcaCards.forEach(card => {
+  card.addEventListener("click", () => {
+    marcaActiva = card.dataset.marca;
+
+    marcaCards.forEach(c => c.classList.remove("activa"));
+    card.classList.add("activa");
+
+    document.querySelectorAll(".producto").forEach(prod => {
+      const marcaProducto = prod.dataset.marca || "na";
+
+      if (marcaActiva === "todas") {
+        prod.style.display = "flex";
+      } else {
+        prod.style.display =
+          marcaProducto === marcaActiva ? "flex" : "none";
+      }
+    });
+
+    document
+      .querySelector(".productos")
+      .scrollIntoView({ behavior: "smooth" });
+  });
+});
+
 
     actualizarBadge();
 });
