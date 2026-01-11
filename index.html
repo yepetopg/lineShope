@@ -18,7 +18,7 @@
 
 
         <div class="logoContainer">
-            <a href="#carrucel"><img src="img/logo.png" alt="logo" class="logo"></a>
+            <a href="#carrucel"><img src="img/logo.png" alt="logo" class="logo" id="logoAdmin"></a>
         </div>
 
         <div class="searchContainer">
@@ -245,6 +245,34 @@
             <button id="cerrarBuscador">✕</button>
         </div>
     </div>
+    <!-- LOGIN ADMIN -->
+    <div class="modal" id="modalLoginAdmin">
+        <div class="modal-content">
+
+            <!-- ===== LOGIN ===== -->
+            <div class="admin-login" id="adminLoginView">
+            <h2>Acceso administrador</h2>
+
+            <input type="email" id="adminEmail" placeholder="Correo" />
+            <input type="password" id="adminPassword" placeholder="Contraseña" />
+
+            <button id="btnLoginAdmin">Ingresar</button>
+            <button id="btnCerrarLogin" class="btn-secundario">Cancelar</button>
+            </div>
+
+            <!-- ===== BIENVENIDA ===== -->
+            <div class="admin-welcome" id="adminWelcomeView">
+            <h2>Bienvenido de vuelta 👋</h2>
+            <p id="adminNombre"></p>
+
+            <button id="btnLogoutAdmin">Cerrar sesión</button>
+            <button id="cerrarLoginAdmin">Cancelar</button>
+
+            </div>
+
+        </div>
+    </div>
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
