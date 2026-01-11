@@ -1,3 +1,11 @@
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
 import { onSnapshot } 
 from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
@@ -10,6 +18,8 @@ import {
   deleteObject
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-storage.js";
 const storage = getStorage();
+const auth = getAuth();
+
 
 
 import {
@@ -23,9 +33,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-
 import { db } from "./firebase.js";
-
 
 
 async function subirImagenCloudinary(file) {
@@ -891,6 +899,167 @@ marcaCards.forEach(card => {
       .scrollIntoView({ behavior: "smooth" });
   });
 });
+
+
+/* ================= ADMIN MODAL ================= */
+
+const modalLogin = document.getElementById("modalLoginAdmin");
+
+const loginView = document.getElementById("adminLoginView");
+const welcomeView = document.getElementById("adminWelcomeView");
+
+const adminNombre = document.getElementById("adminNombre");
+
+const btnLoginAdmin = document.getElementById("btnLoginAdmin");
+const btnLogoutAdmin = document.getElementById("btnLogoutAdmin");
+
+onAuthStateChanged(auth, async (user) => {
+  // 🔄 Reset SIEMPRE
+  document.body.classList.remove("admin");
+
+  loginView.style.display = "block";
+  welcomeView.style.display = "none";
+
+  if (!user) return;
+
+  const adminRef = doc(db, "admins", user.uid);
+  const adminSnap = await getDoc(adminRef);
+
+  if (!adminSnap.exists()) return;
+
+  const adminData = adminSnap.data();
+
+  adminNombre.textContent =
+    `${adminData.nombre || adminData.email} (Administrador)`;
+
+  // activar modo admin
+  document.body.classList.add("admin");
+
+  loginView.style.display = "none";
+  welcomeView.style.display = "block";
+
+  console.log("👑 Modo admin activado");
+});
+
+
+
+// abrir login (puedes luego ponerlo en el menú)
+document.querySelector(".fab-main")?.addEventListener("click", () => {
+  modalLogin.style.display = "flex";
+});
+
+// cerrar
+
+
+// login
+btnLoginAdmin.addEventListener("click", async () => {
+  const email = document.getElementById("adminEmail").value;
+  const pass = document.getElementById("adminPassword").value;
+
+  if (!email || !pass) {
+    alert("Completa los campos");
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    modalLogin.style.display = "none";
+  } catch (err) {
+    alert("Credenciales incorrectas");
+  }
+});
+
+/* ================= LOGIN ADMIN POR DOBLE CLICK ================= */
+
+const logoAdmin = document.getElementById("logoAdmin");
+
+
+if (logoAdmin) {
+  let clicks = 0;
+  let timer = null;
+
+  logoAdmin.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    clicks++;
+
+    if (clicks === 1) {
+      timer = setTimeout(() => {
+        clicks = 0;
+      }, 300);
+    }
+
+    if (clicks === 2) {
+      clearTimeout(timer);
+      clicks = 0;
+
+      modalLogin.style.display = "flex";
+      console.log("🔐 Login admin abierto");
+    }
+  });
+}
+    /* ================= SALIR MODO ADMIN ================= */
+
+
+btnLogoutAdmin?.addEventListener("click", async () => {
+  await signOut(auth);
+  alert("Sesión cerrada");
+});
+
+btnLoginAdmin.addEventListener("click", async () => {
+  const email = document.getElementById("adminEmail").value.trim();
+  const pass = document.getElementById("adminPassword").value.trim();
+
+  if (!email || !pass) {
+    alert("Completa los campos");
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    modalLogin.style.display = "none";
+  } catch (err) {
+    alert("Correo o contraseña incorrectos");
+  }
+});
+
+btnLogoutAdmin.addEventListener("click", async () => {
+  await signOut(auth);
+  modalLogin.style.display = "none";
+});
+
+
+if (logoAdmin) {
+  let clicks = 0;
+  let timer = null;
+
+  logoAdmin.addEventListener("click", (e) => {
+    e.preventDefault();
+    clicks++;
+
+    if (clicks === 1) {
+      timer = setTimeout(() => clicks = 0, 300);
+    }
+
+    if (clicks === 2) {
+      clearTimeout(timer);
+      clicks = 0;
+      modalLogin.style.display = "flex";
+    }
+  });
+}
+    const cerrarAdminModal = document.getElementById("cerrarLoginAdmin");
+
+    const btnCerrarLogin = document.getElementById("btnCerrarLogin");
+    // cerrar modal sin login
+btnCerrarLogin.addEventListener("click", () => {
+  modalLogin.style.display = "none";
+});
+// cerrar modal (vista admin)
+cerrarAdminModal.addEventListener("click", () => {
+  modalLogin.style.display = "none";
+});
+
 
 
     actualizarBadge();
