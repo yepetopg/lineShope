@@ -658,6 +658,29 @@ buscador.addEventListener("input", function () {
     });
 });
 
+document.addEventListener("click", (e) => {
+  const overlay = document.getElementById("buscadorOverlay");
+  const box = document.querySelector(".buscador-box");
+  const btnSearch = document.getElementById("iconoBusqueda");
+
+  if (!overlay || !box || !btnSearch) return;
+
+  // Si el buscador NO está visible, no hacemos nada
+  if (overlay.style.display !== "flex") return;
+
+  // Si el click fue dentro del buscador o en la lupa, no cerrar
+  if (
+    box.contains(e.target) ||
+    btnSearch.contains(e.target)
+  ) {
+    return;
+  }
+
+  // 🔥 Click afuera → cerrar
+  overlay.style.display = "none";
+});
+
+
 async function cargarProductosDesdeFirebase() {
   const productosRef = collection(db, "productos");
   const snapshot = await getDocs(productosRef);
@@ -1060,6 +1083,83 @@ cerrarAdminModal.addEventListener("click", () => {
   modalLogin.style.display = "none";
 });
 
+const btnMenu = document.querySelector(".menu");
+const menu = document.getElementById("menuLateral");
+const overlayMenu = document.getElementById("menuOverlay");
+const cerrarMenuBtn = document.getElementById("cerrarMenu");
+const btnBuscar = document.querySelector(".search"); // lupa
+
+function abrirMenu() {
+  menu.classList.add("open");
+  overlayMenu.classList.add("show");
+}
+
+function cerrarMenu() {
+  menu.classList.remove("open");
+  overlayMenu.classList.remove("show");
+}
+
+btnMenu.addEventListener("click", abrirMenu);
+cerrarMenuBtn.addEventListener("click", cerrarMenu);
+overlayMenu.addEventListener("click", cerrarMenu);
+
+/* 🔥 CIERRA MENU SI ABRE EL BUSCADOR */
+if (btnBuscar) {
+  btnBuscar.addEventListener("click", cerrarMenu);
+}
+
+document.addEventListener("click", (e) => {
+  const modalCarrito = document.getElementById("modalCarrito");
+  const carritoBox = document.querySelector(".carrito-box");
+  const btnCarrito = document.getElementById("btnCarrito");
+
+  if (!modalCarrito || !carritoBox || !btnCarrito) return;
+
+  // si el carrito no está abierto
+  if (!modalCarrito.classList.contains("show")) return;
+
+  // si el click fue dentro del carrito o en el botón
+  if (
+    carritoBox.contains(e.target) ||
+    btnCarrito.contains(e.target)
+  ) {
+    return;
+  }
+
+  // 🔥 click afuera → cerrar
+  modalCarrito.classList.remove("show");
+  modalCarrito.style.display = "none";
+});
+
+
+// ================= BOTÓN ADMIN (MENÚ HAMBURGUESA) =================
+
+const btnAdminMenu = document.getElementById("btnAbrirLogin");
+
+btnAdminMenu?.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  // 🔐 Solo permitir si es admin
+  if (!document.body.classList.contains("admin")) {
+    alert("⛔ No eres admin");
+    return;
+  }
+
+  // 👑 Abrir panel admin
+  modalLogin.style.display = "flex";
+  loginView.style.display = "none";
+  welcomeView.style.display = "block";
+});
+
+// ================= CERRAR MENU AL HACER CLICK EN UNA OPCIÓN =================
+
+const opcionesMenu = document.querySelectorAll("#menuLateral a");
+
+opcionesMenu.forEach(opcion => {
+  opcion.addEventListener("click", () => {
+    cerrarMenu(); // usa tu función existente
+  });
+});
 
 
     actualizarBadge();
