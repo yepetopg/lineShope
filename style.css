@@ -1268,9 +1268,7 @@ body {
 }
 
 .btn-eliminar {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: relative;
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -1279,7 +1277,7 @@ body {
   color: #fff;
   font-size: 16px;
   cursor: pointer;
-  opacity: 0;
+  opacity: 1;
   transition: opacity .2s ease, transform .2s ease;
 }
 
@@ -1623,3 +1621,88 @@ body.admin .admin-welcome {
 body.admin .btn-eliminar {
   display: block;
 }
+
+/* ================= MENU LATERAL ================= */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9000;
+}
+
+.menu-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-lateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  max-width: 80vw;
+  height: 100vh;
+
+  background: #f6eeee;
+  box-shadow: 6px 0 25px rgba(0,0,0,0.25);
+
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 25px 20px;
+
+  z-index: 9500;
+}
+
+.menu-lateral.open {
+  transform: translateX(0);
+}
+
+/* BOTÓN CERRAR */
+.menu-close {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* LINKS */
+.menu-lateral a {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.menu-lateral a:hover {
+  color: var(--naranja);
+}
+
+/* FUNCIONA EN PC Y MOBILE */
+.menu {
+  cursor: pointer;
+}
+.overlay-busqueda {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8000;
+}
+
+.overlay-busqueda.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
