@@ -33,6 +33,21 @@
 
         </div>
     </nav>
+    <div  id="carousel"></div>
+    <!-- OVERLAY MENU -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- MENU LATERAL -->
+    <aside class="menu-lateral" id="menuLateral">
+        <button class="menu-close" id="cerrarMenu">✕</button>
+
+        <a href="#carousel">Inicio</a>
+        <a href="#productos">Productos</a>
+        <a href="#promociones">Promociones</a>
+        <a href="#marcas">Marcas</a>
+        <a href="#" id="btnAbrirLogin">Admin</a>
+    </aside>
+
 
 
 
@@ -79,7 +94,7 @@
 
 
     <h2 class="titulo-seccion">Productos destacados</h2>
-    <section class="productos">
+    <section class="productos" id="productos">
         <div class="productos-contenedor">
             <!--<div class="producto" data-categoria="cacharros">
                 <img src="img/bola.webp" alt="" class="productos-img">
@@ -105,7 +120,7 @@
         <!-- más productos -->
         </div>
     </section>
-    <section class="promociones">
+    <section class="promociones" id="promociones">
         <h2 class="titulo-seccion">Promociones</h2>
         <div class="promociones-contenedor"></div>
     </section>
@@ -115,7 +130,7 @@
 
     <section class="marcas">
 
-  <div class="marcas-grid">
+  <div class="marcas-grid" id="marcas">
 
     <div class="marca-card activa" data-marca="todas">
         <div class="marca-logo">
