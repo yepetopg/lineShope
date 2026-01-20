@@ -617,7 +617,7 @@ document.getElementById("btnFactura").addEventListener("click", async () => {
         const mensaje = encodeURIComponent(
             "Hola 👋 Te envío la factura de mi compra. Gracias por el excelente servicio"
         );
-        window.open(`https://wa.me/573137878407?text=${mensaje}`, "_blank");
+        window.open(`https://wa.me/573233825165?text=${mensaje}`, "_blank");
 
     } catch (error) {
         console.error("Error al procesar la compra:", error);
@@ -967,10 +967,6 @@ onAuthStateChanged(auth, async (user) => {
 
 
 // abrir login (puedes luego ponerlo en el menú)
-document.querySelector(".fab-main")?.addEventListener("click", () => {
-  modalLogin.style.display = "flex";
-});
-
 // cerrar
 
 
